@@ -20,10 +20,32 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final List<Employee> employees = new ArrayList<>();
 
     /**
-     * Creates a full name using first and last name.
+     * Helper methods used for employee data processing
+     * and response mapping.
      */
     private String buildFullName(String firstName, String lastName) {
+
         return firstName + " " + lastName;
+    }
+
+    /**
+     * Determines employee status based on contract termination date.
+     */
+    private String determineEmployeeStatus(Employee employee) {
+
+        Instant terminationDate = employee.getContractTerminationDate();
+
+        if (terminationDate == null || terminationDate.isAfter(Instant.now())) {
+
+            return "ACTIVE";
+        }
+
+        return "TERMINATED";
+    }
+
+    private String normalizeEmail(String email) {
+
+        return email.trim().toLowerCase();
     }
 
     /**
@@ -41,9 +63,10 @@ public class EmployeeServiceImpl implements EmployeeService {
                 employee.getJobTitle(),
                 employee.getEmail(),
                 employee.getContractHireDate(),
-                employee.getContractTerminationDate());
+                employee.getContractTerminationDate(),
+                determineEmployeeStatus(employee));
     }
-    
+
     /**
      * Loads sample employee data on startup.
      */
@@ -59,7 +82,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                 30,
                 "Backend Developer",
                 "john.doe@example.com",
-                Instant.now(),
+                Instant.parse("2023-01-15T09:00:00Z"),
                 null);
 
         final Employee employee2 = new EmployeeImpl(
@@ -71,8 +94,8 @@ public class EmployeeServiceImpl implements EmployeeService {
                 28,
                 "Software Engineer",
                 "jane.smith@example.com",
-                Instant.now(),
-                null);
+                Instant.parse("2022-08-10T10:30:00Z"),
+                Instant.parse("2025-08-10T10:30:00Z"));
 
         employees.add(employee1);
         employees.add(employee2);
@@ -115,6 +138,22 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public EmployeeResponse createEmployee(CreateEmployeeRequest request) {
 
+        String normalizedEmail = normalizeEmail(request.getEmail());
+
+        boolean emailExists = employees.stream()
+                .anyMatch(employee -> normalizeEmail(employee.getEmail()).equals(normalizedEmail));
+
+        if (emailExists) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Employee with this email already exists");
+        }
+
+        if (request.getContractTerminationDate() != null
+                && request.getContractTerminationDate().isBefore(request.getContractHireDate())) {
+
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "Contract termination date cannot be before hire date");
+        }
+
         final Employee employee = new EmployeeImpl(
                 UUID.randomUUID(),
                 request.getFirstName(),
@@ -123,9 +162,9 @@ public class EmployeeServiceImpl implements EmployeeService {
                 request.getSalary(),
                 request.getAge(),
                 request.getJobTitle(),
-                request.getEmail(),
+                normalizedEmail,
                 request.getContractHireDate(),
-                null);
+                request.getContractTerminationDate());
 
         employees.add(employee);
 

@@ -6,6 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Concrete implementation of the Employee interface.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

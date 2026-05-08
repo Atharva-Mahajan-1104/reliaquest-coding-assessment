@@ -1,4 +1,4 @@
-# ReliaQuest Entry-Level Java Challenge
+# ReliaQuest Coding Assessment
 
 ## Overview
 

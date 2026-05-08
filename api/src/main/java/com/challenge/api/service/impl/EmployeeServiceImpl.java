@@ -75,25 +75,25 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         final Employee employee1 = new EmployeeImpl(
                 UUID.randomUUID(),
-                "John",
-                "Doe",
-                buildFullName("John", "Doe"),
+                "Atharva",
+                "Patil",
+                buildFullName("Atharva", "Patil"),
                 75000,
                 30,
                 "Backend Developer",
-                "john.doe@example.com",
+                "atharva.patil@example.com",
                 Instant.parse("2023-01-15T09:00:00Z"),
                 null);
 
         final Employee employee2 = new EmployeeImpl(
                 UUID.randomUUID(),
-                "Jane",
-                "Smith",
-                buildFullName("Jane", "Smith"),
+                "Om",
+                "Chavan",
+                buildFullName("Om", "Chavan"),
                 82000,
                 28,
                 "Software Engineer",
-                "jane.smith@example.com",
+                "om.chavan@example.com",
                 Instant.parse("2022-08-10T10:30:00Z"),
                 Instant.parse("2025-08-10T10:30:00Z"));
 

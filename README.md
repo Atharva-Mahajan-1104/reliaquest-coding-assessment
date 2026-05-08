@@ -64,14 +64,42 @@ Code formatting and style validation were handled using the Diffplug Spotless Gr
 GET /api/v1/employee
 ```
 
+Retrieves all employees.
+
+---
+
 ### Get Employee By UUID
 
 ```http
 GET /api/v1/employee/{uuid}
 ```
 
+Retrieves a specific employee using the employee UUID.
+
+> Note: Employee UUIDs are generated dynamically during application startup and employee creation.
+
+---
+
 ### Create Employee
 
 ```http
 POST /api/v1/employee
 ```
+
+Creates a new employee.
+
+#### Sample Request Body
+
+```json
+{
+  "firstName": "Rahul",
+  "lastName": "Sharma",
+  "salary": 85000,
+  "age": 29,
+  "jobTitle": "Software Engineer",
+  "email": "rahul.sharma@test.com",
+  "contractHireDate": "2024-01-15T10:00:00Z"
+  }
+```
+
+
